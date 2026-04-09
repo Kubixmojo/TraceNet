@@ -11,5 +11,4 @@
         -t count   – send a specified number of echo requests continuously
     
 
-
-In work (if you didn't guess)
+Work in progress
