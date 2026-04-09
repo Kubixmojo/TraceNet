@@ -1,5 +1,6 @@
 #!/bin/bash
-PREV=$(pwd)
-cd ~/Dokumenty/Net_Tools/Tracert/build
-cmake .. && make -j$(nproc) && sudo setcap cap_net_raw+ep ./TraceNet && ./TraceNet
-cd "$PREV"
+cd "$(dirname "$0")"
+mkdir -p build && cd build
+cmake .. && make -j$(nproc)
+sudo setcap cap_net_raw+ep ./TraceNet
+./TraceNet
