@@ -25,10 +25,7 @@ add_executable(TraceNet
     src/core/portscan.cpp
     src/core/traceroute.cpp
     src/core/dns.cpp
-    src/core/iface.cpp
-    src/core/sniffer.cpp
     src/core/validate.cpp
-    src/core/ssl.cpp
 )
 
 target_link_libraries(TraceNet PRIVATE
