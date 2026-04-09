@@ -18,11 +18,21 @@ HostValidation validate_host(const std::string& host) {
     if (inet_pton(AF_INET6, host.c_str(), &addr6) == 1)
         return { HostType::IPV6, "" };
 
-    // hostname - podstawowy check
-    if (host.empty())
-        return { HostType::INVALID, "pusty host" };
+    // hostname
+        if (host.empty())
+            return { HostType::INVALID, "pusty host" };
 
-    // twój algorytm sprawdzania znaków hostname
+        // dozwolone znaki: litery, cyfry, myślnik, kropka
+        for (char c : host) {
+            if (!isalnum(c) && c != '-' && c != '.')
+                return { HostType::INVALID, "niedozwolony znak: " + std::string(1, c) };
+        }
+
+        // musi mieć kropkę (google.com, nie samo "google")
+        if (host.find('.') == std::string::npos)
+            return { HostType::INVALID, "niepoprawny host: " + host };
+
+        return { HostType::HOSTNAME, "" };
 
     // jeśli nic nie pasuje
     return { HostType::INVALID, "niepoprawny host: " + host };

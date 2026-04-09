@@ -6,7 +6,7 @@
 
 // ─── opcje pinga ─────────────────────────────────────────────
 struct PingOptions {
-    int     count       = 4;      // -c  ile pakietów (0 = nieskończoność)
+    int     count       = 4;      // -t  ile pakietów (0 = nieskończoność)
     int     interval_ms = 1000;   // -i  przerwa między pakietami [ms]
     int     timeout_ms  = 1000;   // -W  timeout na odpowiedź [ms]
     int     payload     = 56;     // -s  rozmiar payload [bytes]
