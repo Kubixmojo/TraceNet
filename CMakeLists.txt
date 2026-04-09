@@ -22,7 +22,6 @@ add_executable(TraceNet
     # core
     src/core/icmp.cpp
     src/core/ping.cpp
-    src/core/portscan.cpp
     src/core/traceroute.cpp
     src/core/dns.cpp
     src/core/validate.cpp
