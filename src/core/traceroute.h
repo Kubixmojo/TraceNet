@@ -7,13 +7,13 @@ struct HopResult {
     std::string ip;
     double rtt_ms;
     bool timeout;
-    bool reached; // czy to cel
+    bool reached; 
 };
 
 struct TracerouteOptions {
     int maxHops   = 30;
     int timeoutMs = 3000;
-    int probes    = 3; // ile razy pingujemy każdy hop
+    int probes    = 3; 
 };
 
 std::vector<HopResult> traceroute(const std::string& host, const TracerouteOptions& opts);

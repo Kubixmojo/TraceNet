@@ -21,7 +21,7 @@ void cmd_dns(const std::vector<std::string>& args) {
 
     std::string type = (args.size() >= 3) ? args[2] : "ALL";
 
-    // reverse lookup jeśli IP
+    
     struct in_addr tmp;
     if (inet_pton(AF_INET, args[1].c_str(), &tmp) == 1) {
         std::cout << "PTR " << args[1] << " → " << dns_reverse(args[1]) << "\n";

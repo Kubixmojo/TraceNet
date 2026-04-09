@@ -9,7 +9,7 @@
 #include <cstring>
 
 #include "repl.h"
-#include "colors.h" 
+#include "colors.h" //colors
 #include "cli/cmd_ping.h"
 #include "cli/cmd_dns.h"
 #include "cli/cmd_traceroute.h"
@@ -32,8 +32,9 @@ std::vector<std::string> Repl::split(const std::string& input) {
     return tokens;
 }
 
+//Tab
 static const char* commands[] = {
-    "ping", "scan", "traceroute", "dns", "ssl", "sniff", "help", "exit", nullptr
+    "ping", "scan", "traceroute", "dns", "ssl", "sniff", "help", "exit", nullptr   // for later make it work with big leathers too
 };
 
 static char* command_completer(const char* text, int state) {
@@ -54,8 +55,8 @@ void Repl::run() {
     rl_attempted_completion_function = nullptr;
     rl_completion_entry_function = command_completer;
 
-    std::cout << CLR_CYAN << CLR_BOLD << "TraceNet v0.3" << CLR_RESET << "\n";
-    std::cout << CLR_GRAY << "wpisz 'help' lub 'exit'\n" << CLR_RESET;
+    std::cout << CLR_CYAN << CLR_BOLD << "TraceNet v0.1" << CLR_RESET << "\n";
+    std::cout << CLR_GRAY << "Write 'help' or 'exit'\n" << CLR_RESET;
 
     while (true) {
         char* raw = readline(prompt.c_str());
@@ -67,19 +68,30 @@ void Repl::run() {
         add_history(line.c_str());
 
         auto args = split(line);
+        if (args.empty()) continue;    // fix for space crash 
         std::transform(args[0].begin(), args[0].end(), args[0].begin(), ::tolower);
 
-        if (args[0] == "exit") {
-            break;
-        } else if (args[0] == "ping") {
+        // Comands
+        if (args[0] == "ping") {
             cmd_ping(args);
-        } else if (args[0] == "dns") {
-            cmd_dns(args);
+        } else if (args[0] == "scan") {
+
         } else if (args[0] == "traceroute") {
             cmd_traceroute(args);
+        } else if (args[0] == "dns") {
+            cmd_dns(args);
+        } else if (args[0] == "ssl") {           // do not use big leathers here
+            // ssl
+        } else if (args[0] == "sniff") {
+            // sniff
+        } else if (args[0] == "help") {
+            // help meeeee...
         }
-        else {
-            std::cout << CLR_ERROR << args[0] << " Unknown command" << CLR_RESET << "\n";
+        // CLI
+        else if (args[0] == "exit") {
+            break;
+        } else {
+            std::cout << CLR_ERROR << "Unknown command: " << args[0] << CLR_RESET << "\n";
         }
     }
 }

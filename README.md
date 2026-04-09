@@ -10,3 +10,6 @@
         -t         – send echo requests continuously
         -t count   – send a specified number of echo requests continuously
     
+
+
+In work (if you didn't guess)

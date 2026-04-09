@@ -13,7 +13,7 @@
 std::vector<HopResult> traceroute(const std::string& host, const TracerouteOptions& opts) {
     std::vector<HopResult> results;
 
-    // resolwuj cel
+    
     struct hostent* he = gethostbyname(host.c_str());
     if (!he) return results;
 
@@ -29,13 +29,13 @@ std::vector<HopResult> traceroute(const std::string& host, const TracerouteOptio
         hop.timeout = true;
         hop.reached = false;
 
-        // send socket z TTL
+        
         int send_sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
         if (send_sock < 0) break;
 
         setsockopt(send_sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 
-        // recv socket
+        
         int recv_sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
         if (recv_sock < 0) { close(send_sock); break; }
 
@@ -44,11 +44,11 @@ std::vector<HopResult> traceroute(const std::string& host, const TracerouteOptio
         tv.tv_usec = (opts.timeoutMs % 1000) * 1000;
         setsockopt(recv_sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
-        // buduj pakiet ICMP Echo Request
+        
         uint8_t packet[64];
         memset(packet, 0, sizeof(packet));
         icmp_header* icmp = (icmp_header*)packet;
-        icmp->type     = 8; // Echo Request
+        icmp->type     = 8; 
         icmp->code     = 0;
         icmp->id       = htons(getpid() & 0xFFFF);
         icmp->sequence = htons(ttl);
@@ -58,7 +58,7 @@ std::vector<HopResult> traceroute(const std::string& host, const TracerouteOptio
         sendto(send_sock, packet, sizeof(packet), 0,
                (struct sockaddr*)&dest, sizeof(dest));
 
-        // odbierz odpowiedź
+        
         uint8_t buf[512];
         struct sockaddr_in from{};
         socklen_t fromlen = sizeof(from);
@@ -72,9 +72,9 @@ std::vector<HopResult> traceroute(const std::string& host, const TracerouteOptio
             hop.ip      = inet_ntoa(from.sin_addr);
             hop.timeout = false;
 
-            // sprawdź typ odpowiedzi
-            icmp_header* resp = (icmp_header*)(buf + 20); // skip IP header
-            if (resp->type == 0) // Echo Reply — dotarliśmy do celu
+            
+            icmp_header* resp = (icmp_header*)(buf + 20); 
+            if (resp->type == 0) 
                 hop.reached = true;
         }
 

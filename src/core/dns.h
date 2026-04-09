@@ -10,7 +10,7 @@ struct DnsRecord {
     DnsRecordType type;
     std::string type_str;
     std::string value;
-    int priority = 0; // dla MX
+    int priority = 0; 
     int ttl      = 0;
 };
 
@@ -22,4 +22,4 @@ struct DnsResult {
 };
 
 DnsResult dns_lookup(const std::string& host, const std::string& type = "ALL");
-std::string dns_reverse(const std::string& ip); // PTR lookup
+std::string dns_reverse(const std::string& ip); 

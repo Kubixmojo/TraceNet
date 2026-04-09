@@ -1,5 +1,3 @@
-// ping.cpp
-
 #include "ping.h"
 #include "icmp.h"
 
@@ -34,7 +32,7 @@ static long elapsed_ms(const timespec& start, const timespec& now)
     return sec * 1000L + nsec / 1000000L;
 }
 
-// ─── resolve hosta do adresu (IPv4 lub IPv6) ─────────────────
+
 static bool resolve(const char* host, const PingOptions& opts,
                     sockaddr_storage& out, int& family)
 {
@@ -60,7 +58,7 @@ static bool resolve(const char* host, const PingOptions& opts,
     return true;
 }
 
-// ─── checksum helper (bezpieczny byte-wise) ───────────────────
+
 static uint32_t checksum_accumulate(const uint8_t* data, size_t len, uint32_t sum = 0)
 {
     while (len > 1) {
@@ -84,7 +82,7 @@ static uint16_t checksum_finalize(uint32_t sum)
     return static_cast<uint16_t>(~sum);
 }
 
-// ─── checksum IPv4 ICMP / IPv6 ICMPv6 ────────────────────────
+
 static uint16_t icmpv4_checksum(const void* data, size_t len)
 {
     const auto* p = static_cast<const uint8_t*>(data);
@@ -113,13 +111,13 @@ static uint16_t icmpv6_checksum(const sockaddr_in6& src,
 
     uint8_t pseudo[40]{};
 
-    // Upper-layer packet length (4 bytes, big-endian)
+    
     pseudo[0] = static_cast<uint8_t>((len >> 24) & 0xff);
     pseudo[1] = static_cast<uint8_t>((len >> 16) & 0xff);
     pseudo[2] = static_cast<uint8_t>((len >> 8) & 0xff);
     pseudo[3] = static_cast<uint8_t>(len & 0xff);
 
-    // Next header = ICMPv6 (58)
+    
     pseudo[7] = 58;
 
     sum = checksum_accumulate(pseudo, sizeof(pseudo), sum);
@@ -128,7 +126,7 @@ static uint16_t icmpv6_checksum(const sockaddr_in6& src,
     return checksum_finalize(sum);
 }
 
-// ─── buduj pakiet ICMP Echo Request ──────────────────────────
+
 static std::vector<uint8_t> build_packet(int family, int seq,
                                          int payload_size, pid_t id,
                                          const sockaddr_storage* local_src = nullptr,
@@ -138,14 +136,14 @@ static std::vector<uint8_t> build_packet(int family, int seq,
     std::vector<uint8_t> pkt(total, 0);
 
     if (family == AF_INET) {
-        pkt[0] = 8;   // ICMP Echo Request
+        pkt[0] = 8;   
         pkt[1] = 0;
     } else {
-        pkt[0] = 128; // ICMPv6 Echo Request
+        pkt[0] = 128; 
         pkt[1] = 0;
     }
 
-    // id i seq w big-endian
+    
     pkt[4] = static_cast<uint8_t>((id >> 8) & 0xff);
     pkt[5] = static_cast<uint8_t>(id & 0xff);
     pkt[6] = static_cast<uint8_t>((seq >> 8) & 0xff);
@@ -173,7 +171,7 @@ static std::vector<uint8_t> build_packet(int family, int seq,
     return pkt;
 }
 
-// ─── główna funkcja ───────────────────────────────────────────
+
 PingResult ping(const char* host, const PingOptions& opts, int seq)
 {
     PingResult result{};
@@ -235,7 +233,7 @@ PingResult ping(const char* host, const PingOptions& opts, int seq)
         }
     }
 
-    // connect() ułatwia source address / routing, a dla IPv6 pomaga też z checksum
+    
     if (connect(sock, reinterpret_cast<sockaddr*>(&addr),
                 (family == AF_INET6) ? sizeof(sockaddr_in6) : sizeof(sockaddr_in)) < 0) {
         return fail(strerror(errno));
@@ -320,7 +318,7 @@ PingResult ping(const char* host, const PingOptions& opts, int seq)
         if (!(pfd.revents & POLLIN))
             continue;
 
-        // ważne: reset przed każdym recvmsg
+        
         msg.msg_namelen = sizeof(sender);
         msg.msg_controllen = sizeof(cmsg_buf);
 
